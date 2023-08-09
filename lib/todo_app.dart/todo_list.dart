@@ -62,13 +62,17 @@ class _TodoListState extends State<AddTodo> {
     };
     final isSuccess = await TodoService.submitData(body);
     if (isSuccess) {
-      print('success');
+      if (kDebugMode) {
+        print('success');
+      }
       titleController.text = '';
       descriptionController.text = '';
       showSuccessMessage(context, 'Todo added successfully');
     } else {
       showErrorMessage(context, 'Failed to add todo');
-      print('faild');
+      if (kDebugMode) {
+        print('faild');
+      }
     }
   }
 
@@ -114,10 +118,17 @@ class _TodoListState extends State<AddTodo> {
               decoration: const InputDecoration(hintText: 'Description'),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: isEdit ? updateData : submitData,
-              // onPressed: () => submitData,
-              child: Text(isEdit ? 'Update' : 'Submit'),
+            SizedBox(
+              height: 45,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.black, // Set the background color here
+                ),
+                onPressed: isEdit ? updateData : submitData,
+                // onPressed: () => submitData,
+                child: Text(isEdit ? 'Update' : 'Submit'),
+              ),
             ),
           ],
         ),

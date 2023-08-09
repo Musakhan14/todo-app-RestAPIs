@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../model/user.dart';
 
 class UserApi {
   static Future<List<User>> fetchUsers() async {
-    print('fetchUsers call');
+    if (kDebugMode) {
+      print('fetchUsers call');
+    }
     const url = 'https://randomuser.me/api/?results=50';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
@@ -15,7 +18,9 @@ class UserApi {
     final users = results.map((e) {
       return User.fromMap(e);
     }).toList();
-    print('fetchUsers complete');
+    if (kDebugMode) {
+      print('fetchUsers complete');
+    }
 
     return users;
   }
