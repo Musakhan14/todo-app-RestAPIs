@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rest_apis/todo_app.dart/todo_list.dart';
 import 'package:rest_apis/todo_app.dart/todo_services/todo_services.dart';
 import 'package:rest_apis/todo_app.dart/utils/snacbar_helper.dart';
+import 'package:rest_apis/todo_app.dart/widget/todo_card.dart';
 
 class TodoGet extends StatefulWidget {
   const TodoGet({super.key});
@@ -93,39 +94,12 @@ class _TodoGetState extends State<TodoGet> {
               padding: const EdgeInsets.all(10),
               itemBuilder: (context, index) {
                 final item = items[index];
-                final id = item['_id'];
-                return Card(
-                  color: const Color.fromARGB(255, 218, 230, 236),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: Text('${index + 1}'),
-                    ),
-                    title: Text(
-                      item['title'],
-                    ),
-                    subtitle: Text(
-                      item['description'],
-                    ),
-                    trailing: PopupMenuButton(onSelected: (value) {
-                      if (value == 'Edit') {
-                        navigateToEditPage(item);
-                      } else if (value == 'Delete') {
-                        deleteById(id);
-                      }
-                    }, itemBuilder: (context) {
-                      return [
-                        const PopupMenuItem(
-                          value: 'Edit',
-                          child: Text('Edit'),
-                        ),
-                        const PopupMenuItem(
-                          value: 'Delete',
-                          child: Text('Delete'),
-                        ),
-                      ];
-                    }),
-                  ),
+                // final id = item['_id'];
+                return TodoCard(
+                  deleteById: deleteById,
+                  index: index,
+                  item: item,
+                  navigateEdit: navigateToEditPage,
                 );
               },
             ),
