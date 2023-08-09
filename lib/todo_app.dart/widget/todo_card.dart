@@ -4,11 +4,18 @@ class TodoCard extends StatelessWidget {
   final int index;
   final Map item;
   final Function(Map) navigateEdit;
-  final 
-  const TodoCard({super.key});
+  final Function(String) deleteById;
+  const TodoCard({
+    super.key,
+    required this.index,
+    required this.item,
+    required this.navigateEdit,
+    required this.deleteById,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final id = item['_id'] as String;
     return Card(
       color: const Color.fromARGB(255, 218, 230, 236),
       child: ListTile(
@@ -24,7 +31,7 @@ class TodoCard extends StatelessWidget {
         ),
         trailing: PopupMenuButton(onSelected: (value) {
           if (value == 'Edit') {
-            navigateToEditPage(item);
+            navigateEdit(item);
           } else if (value == 'Delete') {
             deleteById(id);
           }

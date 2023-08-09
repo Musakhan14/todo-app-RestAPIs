@@ -23,4 +23,30 @@ class TodoService {
       return null;
     }
   }
+
+  static Future<bool> updateData(String id, Map body) async {
+    //udate data to the sever
+    final url = 'https://api.nstack.in/v1/todos/$id';
+    final uri = Uri.parse(url);
+    final response = await http.put(
+      uri,
+      body: jsonEncode(body),
+      headers: {'Content-Type': 'application/json'},
+    );
+    //show succes or fail based on status
+    return response.statusCode == 200;
+  }
+
+  static Future<bool> submitData(Map body) async {
+    //udate data to the sever
+    const url = 'https://api.nstack.in/v1/todos';
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(body),
+      headers: {'Content-Type': 'application/json'},
+    );
+    //show succes or fail based on status
+    return response.statusCode == 201;
+  }
 }

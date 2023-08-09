@@ -1,9 +1,9 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
+// ignore_for_file: use_build_context_synchronously
 
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:rest_apis/todo_app.dart/todo_services/todo_services.dart';
+import 'package:rest_apis/todo_app.dart/utils/snacbar_helper.dart';
 
 class AddTodo extends StatefulWidget {
   final Map? todo;
@@ -17,27 +17,6 @@ class _TodoListState extends State<AddTodo> {
   TextEditingController titleController = TextEditingController();
 
   TextEditingController descriptionController = TextEditingController();
-
-//   Future<void> fetchTodo()async{
-//   final url='https://api.nstack.in/v1/todos?page=1&limit=10';
-// }
-  void showSuccessMessage(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void showErrorMessage(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        style: const TextStyle(color: Colors.white),
-      ),
-      backgroundColor: Colors.red,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
 
   Future<void> updateData() async {
     final todo = widget.todo;
@@ -57,21 +36,18 @@ class _TodoListState extends State<AddTodo> {
       "is_completed": false
     };
     //udate data to the sever
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final response = await http.put(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
+    final isSuccess = await TodoService.updateData(id, body);
     //show succes or fail based on status
-    if (response.statusCode == 200) {
-      print('success');
+    if (isSuccess) {
+      if (kDebugMode) {
+        print('success');
+      }
       showSuccessMessage(context, 'Todo Update successfully');
     } else {
       showErrorMessage(context, 'Failed to Update todo');
-      print('faild');
-      print(response.body);
+      if (kDebugMode) {
+        print('faild');
+      }
     }
     //show succes or fail based on status
   }
@@ -84,14 +60,8 @@ class _TodoListState extends State<AddTodo> {
       "description": description,
       "is_completed": false
     };
-    const url = 'https://api.nstack.in/v1/todos';
-    final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
-    if (response.statusCode == 201) {
+    final isSuccess = await TodoService.submitData(body);
+    if (isSuccess) {
       print('success');
       titleController.text = '';
       descriptionController.text = '';
@@ -99,14 +69,12 @@ class _TodoListState extends State<AddTodo> {
     } else {
       showErrorMessage(context, 'Failed to add todo');
       print('faild');
-      print(response.body);
     }
   }
 
   bool isEdit = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final todo = widget.todo;
     if (todo != null) {
